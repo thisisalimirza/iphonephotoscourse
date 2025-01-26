@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Specify packages that should be transpiled
-  transpilePackages: ['bcryptjs', 'jsonwebtoken'],
-  
   // Configure server-side settings
   experimental: {
-    serverActions: true,
-    serverComponentsExternalPackages: ['bcryptjs', 'jsonwebtoken', '@prisma/client'],
+    // External packages that should be treated as server-only
+    serverComponentsExternalPackages: ['@prisma/client'],
   },
 
   // Headers to disable Edge Runtime where needed

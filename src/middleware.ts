@@ -22,7 +22,7 @@ const adminPaths = [
 // Force Node.js runtime for all API routes
 export const runtime = 'nodejs';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public paths
@@ -43,11 +43,19 @@ export function middleware(request: NextRequest) {
 
   // For admin paths, verify admin role
   if (adminPaths.some(path => pathname.startsWith(path))) {
-    const user = await verifyToken(token);
-    if (!user || user.role !== 'ADMIN') {
-      // For API routes, return 401 instead of redirecting
+    try {
+      const user = await verifyToken(token);
+      if (!user || user.role !== 'ADMIN') {
+        // For API routes, return 401 instead of redirecting
+        if (pathname.startsWith('/api/')) {
+          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        return NextResponse.redirect(new URL('/login', request.url));
+      }
+    } catch (error) {
+      // Token verification failed
       if (pathname.startsWith('/api/')) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
       }
       return NextResponse.redirect(new URL('/login', request.url));
     }
@@ -56,9 +64,11 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   // Add CORS headers for API routes
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (pathname.startsWith('/api/')) {
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
 
   return response;
 }
