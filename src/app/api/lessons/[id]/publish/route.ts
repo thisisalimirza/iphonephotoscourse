@@ -12,7 +12,7 @@ async function getUser() {
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const user = await getUser();
@@ -21,7 +21,7 @@ export async function PUT(
     }
 
     const { published } = await req.json();
-    const lessonId = parseInt(params.id);
+    const lessonId = parseInt(context.params.id);
 
     // First check if the parent module is published
     const lesson = await prisma.lesson.findUnique({

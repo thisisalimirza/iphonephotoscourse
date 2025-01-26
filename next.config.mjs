@@ -5,12 +5,7 @@ const nextConfig = {
       allowedOrigins: ['localhost:3000', 'iphonephotoscourse.vercel.app'],
     },
   },
-  // Disable Edge Runtime globally
-  experimental: {
-    appDir: true,
-    serverComponentsExternalPackages: ['bcryptjs', 'jsonwebtoken'],
-  },
-  // Specify routes that should use Node.js runtime
+  serverExternalPackages: ['bcryptjs', 'jsonwebtoken'],
   async headers() {
     return [
       {
