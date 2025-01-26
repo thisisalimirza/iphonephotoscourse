@@ -1,101 +1,248 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { MainNav } from '@/components/layout/MainNav';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleCheckout = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/checkout');
+      const data = await response.json();
+      
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error) {
+      console.error('Error starting checkout:', error);
+      alert('Failed to start checkout process. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white">
+      <MainNav />
+      
+      {/* Hero section */}
+      <div className="max-w-7xl mx-auto px-6 pt-24 pb-16">
+        <div className="flex flex-col items-center">
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-sm text-blue-600">
+            Master the iPhone
+          </div>
+          
+          <div className="relative mt-8">
+            <h1 className="text-[80px] leading-[1.1] font-serif italic text-center text-gray-50">
+              Learn <span className="not-italic font-sans font-bold">the correct way to</span>
+              <br />
+              <span className="not-italic font-sans font-bold">use your iPhone camera</span>
+            </h1>
+            <h1 className="absolute inset-0 text-[80px] leading-[1.1] font-serif italic text-center bg-gradient-to-b from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              Learn <span className="not-italic font-sans font-bold">the correct way to</span>
+              <br />
+              <span className="not-italic font-sans font-bold">use your iPhone camera</span>
+            </h1>
+          </div>
+
+          <p className="mt-8 text-lg text-gray-700 max-w-2xl text-center">
+            In this step-by-step course, learn the exact settings and techniques to capture amazing photos
+            with your iPhone. No experience needed &mdash; just follow the steps and see the difference!
+          </p>
+
+          <div className="mt-12 space-y-4">
+            <button
+              onClick={handleCheckout}
+              disabled={isLoading}
+              className="w-full sm:w-auto px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors disabled:opacity-75"
+            >
+              {isLoading ? "Processing..." : "Unlock course - $79 "}
+              <span className="line-through ml-1 text-blue-300">$99</span>
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </div>
+
+      {/* Photo gallery */}
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="grid grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div 
+              key={i} 
+              className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer"
+            >
+              Photo {i}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* What you&apos;ll learn section */}
+      <div className="max-w-5xl mx-auto px-6 mt-28">
+        <h2 className="text-2xl font-bold text-center mb-14 text-gray-900">What you&apos;ll learn.</h2>
+        <div className="grid grid-cols-4 gap-8">
+          {learningPoints.map((point, i) => (
+            <div 
+              key={i} 
+              className="bg-white rounded-lg p-5 hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <div className="text-2xl mb-3">{point.icon}</div>
+              <h3 className="font-medium text-[15px] mb-2 text-gray-900">{point.title}</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">{point.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Why this course section */}
+      <div className="max-w-5xl mx-auto px-6 mt-28">
+        <div className="grid grid-cols-2 gap-16">
+          <div className="aspect-square bg-gray-100 rounded-lg"></div>
+          <div className="pt-4">
+            <h2 className="text-2xl font-bold mb-10 text-gray-900">Why this course.</h2>
+            {whyPoints.map((point, i) => (
+              <div key={i} className="mb-8">
+                <h3 className="font-medium text-[15px] mb-2 text-gray-900">{point.title}</h3>
+                <p className="text-sm text-gray-700 leading-relaxed">{point.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Course modules */}
+      <div className="max-w-2xl mx-auto px-6 mt-28">
+        <h2 className="text-2xl font-bold mb-8 text-gray-900">Modules / Lessons</h2>
+        <div className="space-y-2.5">
+          {courseModules.map((module, i) => (
+            <div 
+              key={i} 
+              className="py-1 text-gray-700 hover:text-blue-600 cursor-pointer transition-colors"
+            >
+              <p className="text-sm">{module}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA section */}
+      <div className="text-center mt-28">
+        <h2 className="text-2xl font-bold mb-6 text-gray-900">Not ready to buy? Start with a free preview</h2>
+        <Link
+          href="/signup"
+          className="inline-flex rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Create Free Account
+        </Link>
+        <p className="mt-4 text-sm text-gray-700">Preview the course content and upgrade anytime</p>
+      </div>
+
+      {/* FAQ section */}
+      <div className="max-w-2xl mx-auto px-6 mt-28 mb-28">
+        <h2 className="text-2xl font-bold mb-6 text-gray-900">FAQ</h2>
+        <div>
+          {faqItems.map((item, i) => (
+            <div key={i} className="border-t border-gray-200">
+              <button 
+                onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                className="w-full py-4 flex items-center justify-between text-left group"
+              >
+                <span className="text-sm text-gray-900 font-medium group-hover:text-blue-700 transition-colors">
+                  {item.question}
+                </span>
+                <span className="ml-6 text-gray-900 text-lg transition-transform duration-200" 
+                  style={{ transform: openFaqIndex === i ? 'rotate(45deg)' : 'rotate(0deg)' }}
+                >
+                  +
+                </span>
+              </button>
+              {openFaqIndex === i && (
+                <div className="pb-4 text-sm text-gray-700 leading-relaxed">
+                  {item.answer}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="border-t border-gray-200 py-6 text-center text-xs text-gray-700">
+        © 2024 iPhone Photography Course. All rights reserved.
+      </div>
     </div>
   );
 }
+
+const learningPoints = [
+  {
+    icon: '📱',
+    title: 'Best Camera Settings',
+    description: 'Master the launched settings for any situation and learn how to use your iPhone camera like a pro.',
+  },
+  {
+    icon: '🎨',
+    title: 'Color Correction',
+    description: 'Learn how to edit colors and make your photos stand out with professional techniques.',
+  },
+  {
+    icon: '⚡',
+    title: 'Quick Editing Tips',
+    description: 'Master quick editing techniques that will improve your photos in seconds.',
+  },
+  {
+    icon: '📸',
+    title: 'iPhone Camera Tricks',
+    description: 'Discover hidden features and advanced techniques for stunning photos.',
+  },
+];
+
+const whyPoints = [
+  {
+    title: 'For beginners',
+    description: 'Whether you\'re just starting out or looking to improve your skills, this course is perfect for all levels.',
+  },
+  {
+    title: 'Easy to understand',
+    description: 'Step by step tutorials and practical exercises make learning enjoyable.',
+  },
+  {
+    title: 'Proven techniques',
+    description: 'Learn methods used by professional photographers adapted for iPhone.',
+  },
+];
+
+const courseModules = [
+  'Module 1: Introduction to iPhone Photography',
+  'Module 2: Understanding Your iPhone Camera',
+  'Module 3: Creating Strong Compositions',
+  'Module 4: Working with Natural Light',
+  'Module 5: Portrait Photography',
+  'Module 6: Landscape Photography',
+  'Module 7: Advanced Camera Techniques',
+  'Module 8: Editing Basics',
+  'Module 9: Advanced Editing Skills',
+  'Module 10: Creating Your Style',
+  'Module 11: Achieving Your Work',
+];
+
+const faqItems = [
+  { 
+    question: 'When does the course start?',
+    answer: 'The course starts immediately after enrollment. You\'ll get instant access to all materials and can learn at your own pace.'
+  },
+  { 
+    question: 'What\'s included in the course?',
+    answer: 'You\'ll get access to all 11 modules, including video lessons, practical exercises, and downloadable resources. Plus, lifetime access to future updates.'
+  },
+  { 
+    question: 'Will it work for me?',
+    answer: 'Yes! This course is designed for all skill levels, from complete beginners to advanced photographers looking to master iPhone photography.'
+  },
+]; 

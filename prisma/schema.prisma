@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String?
+  name          String?
+  role          UserRole  @default(STUDENT)
+  isActive      Boolean   @default(true)
+  magicToken    String?   @unique
+  tokenExpiry   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+  billing       Json?
+  paymentStatus String    @default("FREE") // Can be "FREE" or "PAID"
+}
+
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
+model Module {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  lessons     Lesson[]
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastPublishedAt DateTime?
+  lastModifiedAt DateTime?
+  order       Int       @default(0)
+}
+
+model Lesson {
+  id                Int      @id @default(autoincrement())
+  title             String
+  description       String?
+  duration          String   @default("")
+  videoUrl          String?  // Direct URL to video file
+  content           String?  @db.Text
+  resources         Json?
+  learningObjectives String[] @default([])
+  isComplete        Boolean   @default(false)
+  published         Boolean   @default(false)
+  module            Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  moduleId          Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  order             Int       @default(0)
+}
