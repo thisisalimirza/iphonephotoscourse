@@ -122,6 +122,7 @@ function SortableModule({ module, onEdit, onLessonDragEnd, onLessonEdit, setModu
       const response = await fetch(`/api/modules/${module.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ 
           title,
           description,

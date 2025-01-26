@@ -29,7 +29,9 @@ export default function ModuleEditPage() {
 
   const fetchModule = async () => {
     try {
-      const response = await fetch(`/api/modules/${moduleId}`);
+      const response = await fetch(`/api/modules/${moduleId}`, {
+        credentials: 'include'
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch module');
       }
@@ -59,6 +61,7 @@ export default function ModuleEditPage() {
       const response = await fetch(`/api/modules/${moduleId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(moduleData),
       });
 

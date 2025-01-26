@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from './Header';
 import Link from 'next/link';
-import { BookOpenIcon, AcademicCapIcon, UserIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon, AcademicCapIcon, UserIcon } from '@heroicons/react/24/outline';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -60,14 +60,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               >
                 <UserIcon className="h-5 w-5 mr-3 text-gray-500" />
                 Profile
-              </Link>
-
-              <Link 
-                href="/settings" 
-                className="flex items-center px-4 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-gray-50"
-              >
-                <Cog6ToothIcon className="h-5 w-5 mr-3 text-gray-500" />
-                Settings
               </Link>
             </div>
           </nav>
