@@ -1,7 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
+
+export const runtime = 'nodejs';
 
 async function getUser() {
   const cookieStore = await cookies();
@@ -10,17 +12,18 @@ async function getUser() {
   return verifyToken(token);
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+type Context = {
+  params: { id: string };
+};
+
+export async function PUT(request: NextRequest, context: Context) {
   try {
     const user = await getUser();
     if (!user || user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const moduleId = parseInt(params.id);
+    const moduleId = parseInt(context.params.id);
     if (isNaN(moduleId)) {
       return NextResponse.json({ error: 'Invalid module ID' }, { status: 400 });
     }
