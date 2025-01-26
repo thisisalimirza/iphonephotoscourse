@@ -5,18 +5,24 @@ const nextConfig = {
       allowedOrigins: ['localhost:3000', 'iphonephotoscourse.vercel.app'],
     },
   },
-  // Specify which routes should not use Edge Runtime
-  serverRuntimeConfig: {
-    // Will only be available on the server side
-    JWT_SECRET: process.env.JWT_SECRET,
-  },
-  publicRuntimeConfig: {
-    // Will be available on both server and client
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  },
-  // Configure routes to use Node.js runtime instead of Edge
+  // Disable Edge Runtime globally
   experimental: {
-    runtime: 'nodejs',
+    appDir: true,
+    serverComponentsExternalPackages: ['bcryptjs', 'jsonwebtoken'],
+  },
+  // Specify routes that should use Node.js runtime
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'x-middleware-prefetch',
+            value: 'disable',
+          },
+        ],
+      },
+    ];
   },
 }
 
