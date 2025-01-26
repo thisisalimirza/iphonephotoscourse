@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'iphonephotoscourse.vercel.app'],
+    },
   },
   // Specify which routes should not use Edge Runtime
   serverRuntimeConfig: {
@@ -14,4 +16,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig 
+export default nextConfig 
