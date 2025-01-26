@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { Prisma } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
 async function getUser() {
   const cookieStore = await cookies();
@@ -122,7 +123,7 @@ export async function DELETE(request: Request) {
     }
 
     // Delete module and all its lessons in a transaction
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Omit<PrismaClient, '$transaction'>) => {
       // First delete all lessons in the module
       await tx.lesson.deleteMany({
         where: { moduleId: parseInt(id) },
