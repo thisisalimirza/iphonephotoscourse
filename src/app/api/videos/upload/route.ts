@@ -1,38 +1,40 @@
 import { NextResponse } from 'next/server';
 import Mux from '@mux/mux-node';
-import { prisma } from '@/lib/prisma';
 
-const { Video } = new Mux(
-  process.env.MUX_TOKEN_ID || '',
-  process.env.MUX_TOKEN_SECRET || ''
-);
+export const runtime = 'nodejs';
+
+const muxClient = new Mux({
+  tokenId: process.env.MUX_TOKEN_ID || '',
+  tokenSecret: process.env.MUX_TOKEN_SECRET || '',
+});
+
+const video = muxClient.video;
 
 export async function POST(request: Request) {
   try {
-    const { lessonId, videoUrl } = await request.json();
+    const { videoUrl } = await request.json();
+
+    if (!videoUrl) {
+      return NextResponse.json(
+        { error: 'Video URL is required' },
+        { status: 400 }
+      );
+    }
 
     // Create a new Mux Asset
-    const asset = await Video.Assets.create({
+    const asset = await video.assets.create({
       input: videoUrl,
       playback_policy: ['public'],
-      test: process.env.NODE_ENV !== 'production'
     });
 
-    // Update the lesson with the Mux Asset information
-    const lesson = await prisma.lesson.update({
-      where: { id: parseInt(lessonId) },
-      data: {
-        videoAssetId: asset.id,
-        videoPlaybackId: asset.playback_ids?.[0]?.id,
-        videoStatus: 'processing'
-      }
+    return NextResponse.json({
+      assetId: asset.id,
+      playbackId: asset.playback_ids?.[0]?.id,
     });
-
-    return NextResponse.json(lesson);
   } catch (error) {
-    console.error('Error uploading video:', error);
+    console.error('Error creating Mux asset:', error);
     return NextResponse.json(
-      { error: 'Failed to upload video' },
+      { error: 'Failed to create video asset' },
       { status: 500 }
     );
   }
@@ -51,13 +53,13 @@ export async function DELETE(request: Request) {
     }
 
     // Delete the asset from Mux
-    await Video.Assets.del(assetId);
+    await video.assets.delete(assetId);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting video:', error);
+    console.error('Error deleting Mux asset:', error);
     return NextResponse.json(
-      { error: 'Failed to delete video' },
+      { error: 'Failed to delete video asset' },
       { status: 500 }
     );
   }
