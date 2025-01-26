@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
 import { prisma } from '@/lib/prisma';
-import { User } from '@/lib/auth';
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -28,7 +27,7 @@ export async function POST(request: Request) {
     const token = randomBytes(32).toString('hex');
     const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    const user = await prisma.user.upsert({
+    await prisma.user.upsert({
       where: { email },
       update: {
         magicToken: token,
@@ -40,7 +39,7 @@ export async function POST(request: Request) {
         tokenExpiry: expiry,
         role: 'STUDENT',
       },
-    }) as User;
+    });
 
     const magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${token}`;
     

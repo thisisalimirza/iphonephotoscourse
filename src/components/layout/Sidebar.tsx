@@ -12,6 +12,10 @@ import {
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
+interface User {
+  role?: string;
+}
+
 const navigation = [
   { name: 'My Profile', href: '/profile', icon: UserCircleIcon },
   { name: 'Payments', href: '/payments', icon: CreditCardIcon },
@@ -20,7 +24,7 @@ const navigation = [
   { name: 'Admin Panel', href: '/admin/courses', icon: Cog8ToothIcon, adminOnly: true },
 ];
 
-export default function Sidebar({ user }: { user?: any }) {
+export default function Sidebar({ user }: { user?: User }) {
   const pathname = usePathname();
 
   const isAdmin = user?.role === 'ADMIN';

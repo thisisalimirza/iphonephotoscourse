@@ -184,7 +184,7 @@ export default function NewLessonPage() {
                     </li>
                     <li>
                       <span className="font-medium">Google Drive:</span> Upload your video to Drive, right-click → Share → 
-                      Copy link. Make sure to set access to "Anyone with the link can view".
+                      Copy link. Make sure to set access to &quot;Anyone with the link can view&quot;.
                     </li>
                     <li>
                       <span className="font-medium">Direct MP4:</span> If hosting your own video files, use a direct MP4 URL. 

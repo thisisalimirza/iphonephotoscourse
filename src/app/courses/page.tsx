@@ -99,7 +99,7 @@ export default function CoursesPage() {
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
               <h2 className="text-lg font-semibold text-yellow-800">Free Preview Mode</h2>
               <p className="text-yellow-700">
-                You're viewing the course in preview mode. 
+                You&apos;re viewing the course in preview mode. 
                 <Link 
                   href="/pricing" 
                   className="text-yellow-800 font-medium hover:text-yellow-900 ml-2"

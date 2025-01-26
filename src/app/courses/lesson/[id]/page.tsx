@@ -125,7 +125,7 @@ export default function LessonPage() {
           {/* Learning Objectives */}
           {lesson.learningObjectives && lesson.learningObjectives.length > 0 && (
             <div className="mb-8 bg-blue-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4 text-blue-900">What You'll Learn</h3>
+              <h3 className="text-lg font-semibold mb-4 text-blue-900">What You&apos;ll Learn</h3>
               <ul className="space-y-2">
                 {lesson.learningObjectives.map((objective, index) => (
                   <li key={index} className="flex items-start">

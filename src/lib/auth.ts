@@ -26,7 +26,6 @@ declare module 'next-auth/jwt' {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const MAGIC_LINK_SECRET = process.env.MAGIC_LINK_SECRET || 'magic-link-secret';
 
 // Email configuration
 const transporter = nodemailer.createTransport({
