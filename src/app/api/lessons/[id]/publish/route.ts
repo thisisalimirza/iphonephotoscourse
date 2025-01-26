@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
 
+export const runtime = 'nodejs';
+
 async function getUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
