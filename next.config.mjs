@@ -5,9 +5,7 @@ const nextConfig = {
       allowedOrigins: ['localhost:3000', 'iphonephotoscourse.vercel.app'],
     },
   },
-  serverComponents: {
-    externalPackages: ['bcryptjs', 'jsonwebtoken'],
-  },
+  transpilePackages: ['bcryptjs', 'jsonwebtoken'],
   async headers() {
     return [
       {
