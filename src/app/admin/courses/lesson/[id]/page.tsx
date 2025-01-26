@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import AuthLayout from '@/components/layout/AuthLayout';
+import AuthLayout from '../../../../../components/layout/AuthLayout';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import VideoPlayer from '@/components/VideoPlayer';
+import VideoPlayer from '../../../../../components/VideoPlayer';
 
 interface Resource {
   title: string;
