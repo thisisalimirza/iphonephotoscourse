@@ -14,6 +14,10 @@ const nextConfig = {
     // Will be available on both server and client
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
+  // Configure routes to use Node.js runtime instead of Edge
+  experimental: {
+    runtime: 'nodejs',
+  },
 }
 
 export default nextConfig 
