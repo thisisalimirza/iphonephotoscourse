@@ -19,7 +19,10 @@ const adminPaths = [
   '/api/lessons',
 ];
 
-export async function middleware(request: NextRequest) {
+// Force Node.js runtime for all API routes
+export const runtime = 'nodejs';
+
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public paths
@@ -50,9 +53,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // Add CORS headers for API routes
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  return response;
 }
 
+// Configure which routes use this middleware
 export const config = {
   matcher: [
     /*

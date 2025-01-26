@@ -2,13 +2,27 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import type { PrismaClient } from '@prisma/client';
 
-export const runtime = 'nodejs';
-
 type TransactionClient = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>;
+
+interface ModuleOrder {
+  id: number;
+  order: number;
+  lessons?: Array<{
+    id: number;
+    order: number;
+  }>;
+}
 
 export async function PUT(request: Request) {
   try {
-    const { modules } = await request.json();
+    const { modules } = await request.json() as { modules: ModuleOrder[] };
+
+    if (!Array.isArray(modules)) {
+      return NextResponse.json(
+        { error: 'Invalid request format' },
+        { status: 400 }
+      );
+    }
 
     // Update all modules and their lessons in a transaction
     await prisma.$transaction(async (tx: TransactionClient) => {
@@ -20,7 +34,7 @@ export async function PUT(request: Request) {
         });
 
         // Update lesson orders if they exist
-        if (courseModule.lessons) {
+        if (courseModule.lessons?.length) {
           for (const lesson of courseModule.lessons) {
             await tx.lesson.update({
               where: { id: lesson.id },
