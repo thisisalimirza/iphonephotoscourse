@@ -12,18 +12,17 @@ async function getUser() {
   return verifyToken(token);
 }
 
-type Context = {
-  params: { id: string };
-};
-
-export async function PUT(request: NextRequest, context: Context) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Record<string, string> }
+) {
   try {
     const user = await getUser();
     if (!user || user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const moduleId = parseInt(context.params.id);
+    const moduleId = parseInt(params.id);
     if (isNaN(moduleId)) {
       return NextResponse.json({ error: 'Invalid module ID' }, { status: 400 });
     }

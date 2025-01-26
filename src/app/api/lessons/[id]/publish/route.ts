@@ -12,11 +12,10 @@ async function getUser() {
   return verifyToken(token);
 }
 
-type Context = {
-  params: { id: string };
-};
-
-export async function PUT(request: NextRequest, context: Context) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Record<string, string> }
+) {
   try {
     const user = await getUser();
     if (!user || user.role !== 'ADMIN') {
@@ -24,7 +23,7 @@ export async function PUT(request: NextRequest, context: Context) {
     }
 
     const { published } = await request.json();
-    const lessonId = parseInt(context.params.id);
+    const lessonId = parseInt(params.id);
 
     // First check if the parent module is published
     const lesson = await prisma.lesson.findUnique({
